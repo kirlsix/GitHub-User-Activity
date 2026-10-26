@@ -1,14 +1,18 @@
 package GitApi
 
+import "fmt"
+
 type RepoEvent struct {
-	Type string
-	Name string
+	Type   string
+	Name   string
+	Action string
 }
 
-func count(eventType string, name string) {
+func count(eventType string, name string, action string) {
 	key := RepoEvent{
-		Type: eventType,
-		Name: name,
+		Type:   eventType,
+		Name:   name,
+		Action: action,
 	}
 	eventsCount[key] += 1
 }
@@ -22,7 +26,36 @@ func CountEvents() map[RepoEvent]int {
 		return nil
 	}
 	for _, v := range events {
-		count(v.Type, v.Repo.Name)
+		count(v.Type, v.Repo.Name, v.Payload.Action)
 	}
 	return eventsCount
 }
+
+func EventsHandler() {
+	CountedEvents := CountEvents()
+	for k, v := range CountedEvents {
+		switch {
+		case k.Type == "PushEvent":
+			fmt.Println("Pushed", v, "commits to", k.Name)
+		case k.Type == "IssuesEvent":
+			if k.Action == "opened" {
+				fmt.Println("Opened", v, "issues in", k.Name)
+			} else if k.Action == "closed" {
+				fmt.Println("Closed", v, "issues in", k.Name)
+			} else if k.Action == "reopened" {
+				fmt.Println("Reopened", v, "issues in", k.Name)
+			}
+		case k.Type == "WatchEvent":
+			fmt.Println("Starred", k.Name)
+		case k.Type == "CreateEvent":
+			fmt.Println("Created", k.Name)
+		}
+
+	}
+}
+
+// PushEvent	Отправил изменения в репозиторий
+// IssuesEvent	Открыл или закрыл issue
+// WatchEvent	Добавил звезду репозиторию
+// PullRequestEvent	Выполнил действие с pull request
+// CreateEvent	Создал репозиторий, ветку или тег

@@ -10,5 +10,5 @@ func main() {
 	if counted == nil {
 		fmt.Println("No recent events")
 	}
-	fmt.Println(counted)
+	GitApi.EventsHandler()
 }
