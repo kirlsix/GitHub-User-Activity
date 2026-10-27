@@ -2,12 +2,15 @@ package GitApi
 
 import "fmt"
 
+// RepoEvent is used as a map key to count the number of events
+// of each event type performed on each repository.
 type RepoEvent struct {
 	Type   string
 	Name   string
 	Action string
 }
 
+// A local function that counts the number of events of each type per repository and stores the results in a map.
 func count(eventType string, name string, action string) {
 	key := RepoEvent{
 		Type:   eventType,
@@ -19,6 +22,9 @@ func count(eventType string, name string, action string) {
 
 var eventsCount map[RepoEvent]int
 
+// A function that retrieves all events using GetEvents(),
+// counts the number of events of each type per repository,
+// and returns a map where the key is a RepoEvent struct and the value is the event count.
 func CountEvents(url string) map[RepoEvent]int {
 	eventsCount = make(map[RepoEvent]int)
 	events := GetEvents(url)
@@ -31,6 +37,10 @@ func CountEvents(url string) map[RepoEvent]int {
 	return eventsCount
 }
 
+// A function that processes the map returned by CountEvents(),
+// checks the event type, and prints the number of events of that type for each repository.
+// A function that processes the map returned by CountEvents(), checks the event type, and prints the number of events of that type for each repository
+// Additional event types can be handled by extending the switch statement.
 func EventsHandler(url string) {
 	CountedEvents := CountEvents(url)
 	for k, v := range CountedEvents {
