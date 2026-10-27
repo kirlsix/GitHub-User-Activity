@@ -59,6 +59,9 @@ func EventsHandler(url string) {
 			fmt.Println("Starred", k.Name)
 		case k.Type == "CreateEvent":
 			fmt.Println("Created", k.Name)
+		default:
+			fmt.Println("Not handled method, do", k.Type, "to", k.Name)
+
 		}
 
 	}
