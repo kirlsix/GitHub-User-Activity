@@ -19,9 +19,9 @@ func count(eventType string, name string, action string) {
 
 var eventsCount map[RepoEvent]int
 
-func CountEvents() map[RepoEvent]int {
+func CountEvents(url string) map[RepoEvent]int {
 	eventsCount = make(map[RepoEvent]int)
-	events := GetEvents()
+	events := GetEvents(url)
 	if events == nil {
 		return nil
 	}
@@ -31,8 +31,8 @@ func CountEvents() map[RepoEvent]int {
 	return eventsCount
 }
 
-func EventsHandler() {
-	CountedEvents := CountEvents()
+func EventsHandler(url string) {
+	CountedEvents := CountEvents(url)
 	for k, v := range CountedEvents {
 		switch {
 		case k.Type == "PushEvent":
@@ -53,9 +53,3 @@ func EventsHandler() {
 
 	}
 }
-
-// PushEvent	Отправил изменения в репозиторий
-// IssuesEvent	Открыл или закрыл issue
-// WatchEvent	Добавил звезду репозиторию
-// PullRequestEvent	Выполнил действие с pull request
-// CreateEvent	Создал репозиторий, ветку или тег

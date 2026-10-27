@@ -23,11 +23,9 @@ type Event struct {
 	} `json:"payload"`
 }
 
-var User string
-
-func GetEvents() []Event {
+func GetEvents(url string) []Event {
 	var result []Event
-	resp, err := http.Get("https://api.github.com/users/sindresorhus/events?per_page=100")
+	resp, err := http.Get(url)
 
 	if resp.StatusCode != http.StatusOK {
 		fmt.Println("Fail to get answer from GitHub. Status:", resp.Status)
@@ -43,6 +41,5 @@ func GetEvents() []Event {
 	if len(result) == 0 {
 		return nil
 	}
-	User = result[0].Actor.Login
 	return result
 }
